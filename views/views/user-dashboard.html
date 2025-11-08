@@ -1,58 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>User Dashboard – Columbus District Bank</title>
+  <title>User Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
   <div class="container mt-4">
     <div class="d-flex justify-content-between mb-4">
-      <h2>Hello, <%= user.name %>!</h2>
+      <h2>Welcome, <%= user.name %></h2>
       <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
     </div>
 
     <div class="card mb-4">
       <div class="card-body">
-        <h4>Demo Balance: <strong class="text-success">$<%= balance.toFixed(2) %></strong></h4>
-        <p class="text-muted"><em>Non-spendable educational credits</em></p>
+        <h5>Balance: $<%= balance %></h5>
       </div>
     </div>
 
     <div class="card">
       <div class="card-body">
-        <h5>Request Transfer (Pending Review)</h5>
-        <form method="POST" action="/transfer">
+        <h5>Request Transfer</h5>
+        <form method="POST" action="/user/transfer">
           <div class="row g-2">
             <div class="col-md-6">
-              <input type="email" name="to_email" placeholder="Recipient email" class="form-control" required>
+              <input type="email" name="to_email" placeholder="To Email" class="form-control" required>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <input type="number" step="0.01" name="amount" placeholder="Amount" class="form-control" required>
             </div>
-            <div class="col-md-3">
-              <button class="btn btn-warning w-100">Request</button>
+            <div class="col-md-2">
+              <button class="btn btn-success">Send</button>
             </div>
           </div>
         </form>
       </div>
     </div>
-
-    <% if (transfers.length > 0) { %>
-      <div class="card mt-4">
-        <div class="card-body">
-          <h5>Your Pending Requests</h5>
-          <ul class="list-group">
-            <% transfers.forEach(t => { %>
-              <li class="list-group-item d-flex justify-content-between">
-                <span>To: <%= t.to_email %> — $<%= t.amount %></span>
-                <span class="badge bg-warning">Pending</span>
-              </li>
-            <% }) %>
-          </ul>
-        </div>
-      </div>
-    <% } %>
   </div>
 </body>
 </html>
