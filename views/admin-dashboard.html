@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between mb-4">
+      <h2>Admin Panel</h2>
+      <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5>Add Credit</h5>
+        <form method="POST" action="/admin/add-credit">
+          <div class="row g-2">
+            <div class="col-md-5">
+              <select name="userId" class="form-select" required>
+                <option value="">Select User</option>
+                <% users.forEach(u => { %>
+                  <option value="<%= u.id %>"><%= u.name %> (<%= u.email %>)</option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <input type="number" step="0.01" name="amount" placeholder="Amount" class="form-control" required>
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-success w-100">Add</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <% if (pending.length > 0) { %>
+      <div class="card">
+        <div class="card-body">
+          <h5>Pending Transfers</h5>
+          <table class="table table-sm">
+            <thead><tr><th>From</th><th>To</th><th>Amount</th><th>Action</th></tr></thead>
+            <tbody>
+              <% pending.forEach(t => { %>
+                <tr>
+                  <td><%= t.from_name %></td>
+                  <td><%= t.to_email %></td>
+                  <td>$<%= t.amount %></td>
+                  <td>
+                    <form method="POST" action="/admin/approve/<%= t.id %>" class="d-inline">
+                      <button class="btn btn-success btn-sm">Approve</button>
+                    </form>
+                    <form method="POST" action="/admin/reject/<%= t.id %>" class="d-inline">
+                      <button class="btn btn-danger btn-sm">Reject</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } else { %>
+      <p>No pending transfers.</p>
+    <% } %>
+  </div>
+</body>
+</html>
