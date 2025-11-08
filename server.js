@@ -3,7 +3,7 @@ const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-
+require('./seed-on-start.js');
 const app = express();
 const db = new sqlite3.Database('./db.sqlite');
 
