@@ -1,5 +1,23 @@
-const { exec } = require('child_process');
-exec('node data/seed.js', (err, stdout, stderr) => {
-  if (err) console.error('Seed failed:', err);
-  else console.log('Users seeded on startup!');
+const sqlite3 = require('sqlite3').verbose();
+const bcrypt = require('bcrypt');
+const db = new sqlite3.Database('./db.sqlite');
+
+bcrypt.hash('admin123', 10, (err, adminHash) => {
+  if (err) return console.error('Hash error:', err);
+  bcrypt.hash('user123', 10, (err, userHash) => {
+    if (err) return console.error('Hash error:', err);
+    db.serialize(() => {
+      db.run(`DELETE FROM users`);
+      db.run(`DELETE FROM credits`);
+      db.run(`DELETE FROM pending_transfers`);
+
+      db.run(`INSERT OR IGNORE INTO users (email, password, name, is_admin) VALUES 
+        ('admin@columbusbank.edu', '${adminHash}', 'Admin', 1),
+        ('alice@columbusbank.edu', '${userHash}', 'Alice Johnson', 0),
+        ('bob@columbusbank.edu', '${userHash}', 'Bob Smith', 0)`);
+
+      console.log('Users seeded safely on startup!');
+    });
+    db.close();
+  });
 });
